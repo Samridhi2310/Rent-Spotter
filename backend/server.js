@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 // ✅ Always parse JSON before routes
 app.use(cors({
-    origin: 'https://rent-spotter-is5y.vercel.app', // Replace with your frontend origin
+    origin: 'https://rent-spotter.vercel.app', // Replace with your frontend origin
     credentials: true
   }));
 app.use(express.json()); 
