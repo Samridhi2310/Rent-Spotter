@@ -16,10 +16,22 @@ const app = express();
 app.use(cookieParser());
 
 // ✅ Always parse JSON before routes
+const allowedOrigins = [
+  'https://rent-spotter.vercel.app',
+  'https://rent-spotter-is5y.vercel.app', // optional if you no longer use it
+  'http://localhost:3000' // for local dev
+];
+
 app.use(cors({
-    origin: 'https://rent-spotter.vercel.app', // Replace with your frontend origin
-    credentials: true
-  }));
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy does not allow this origin'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json()); 
 app.use("/",complaintRoutes)
 app.use("/",userRoutes)
