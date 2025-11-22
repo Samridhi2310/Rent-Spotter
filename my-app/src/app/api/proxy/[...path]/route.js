@@ -1,47 +1,41 @@
 // app/api/proxy/[...path]/route.js
-export async function GET(request, { params }) {
-  return proxyRequest(request);
+const BACKEND_URL = "https://rent-spotter-backend.onrender.com";  // ← double-check this is your exact Render URL
+
+export const dynamic = 'force-dynamic';
+
+export async function GET(request) {
+  return proxy(request);
+}
+export async function POST(request) {
+  return proxy(request);
+}
+export async function PUT(request) {
+  return proxy(request);
+}
+export async function DELETE(request) {
+  return proxy(request);
 }
 
-export async function POST(request, { params }) {
-  return proxyRequest(request);
-}
-
-export async function PUT(request, { params }) {
-  return proxyRequest(request);
-}
-
-export async function PATCH(request, { params }) {
-  return proxyRequest(request);
-}
-
-export async function DELETE(request, { params }) {
-  return proxyRequest(request);
-}
-
-async function proxyRequest(request) {
+async function proxy(request) {
   const url = new URL(request.url);
-  const path = url.pathname.replace('/api/proxy/', '/api/');
-  const backendUrl = `https://rent-spotter-backend.onrender.com${path}${url.search}`;
+  const path = url.pathname.replace('/api/proxy', '');  // removes /api/proxy correctly
+  const targetUrl = BACKEND_URL + path + url.search;
 
-  const response = await fetch(backendUrl, {
+  const response = await fetch(targetUrl, {
     method: request.method,
     headers: {
-      ...Object.fromEntries(request.headers.entries()),
-      host: new URL(backendUrl).host,
+      ...Object.fromEntries(request.headers),
+      host: new URL(BACKEND_URL).host,
     },
-    body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.text() : undefined,
+    body: request.method !== 'GET' ? await request.text() : undefined,
   });
 
-  // Forward set-cookie from backend
+  const newHeaders = new Headers(response.headers);
   const setCookie = response.headers.get('set-cookie');
-  const headers = new Headers(response.headers);
-  if (setCookie) {
-    headers.set('set-cookie', setCookie);
-  }
+  if (setCookie) newHeaders.set('set-cookie', setCookie);
 
   return new Response(response.body, {
     status: response.status,
-    headers,
+    headers: newHeaders,
   });
 }
