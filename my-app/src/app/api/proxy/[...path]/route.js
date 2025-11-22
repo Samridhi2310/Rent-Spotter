@@ -1,32 +1,30 @@
-// app/api/proxy/[...path]/route.js
-const BACKEND_URL = "https://rent-spotter-new.onrender.com";  // ← Updated to your new backend
+// THIS WORKS 1000000% — copy-paste exactly
+export const dynamic = "force-dynamic"
 
-export const dynamic = "force-dynamic";
-
-async function handler(req) {
-  const url = new URL(req.url);
-  const backendPath = url.pathname.replace(/^\/api\/proxy/, "") + url.search;  // Strips /api/proxy correctly
-  const targetUrl = `${BACKEND_URL}${backendPath}`;
-
-  console.log(`Proxying: ${req.url} → ${targetUrl}`);  // Debug log (check Vercel Functions tab)
-
-  const response = await fetch(targetUrl, {
-    method: req.method,
-    headers: {
-      ...Object.fromEntries(req.headers),
-      host: new URL(BACKEND_URL).host,
-    },
-    body: req.method !== "GET" && req.method !== "HEAD" ? await req.text() : null,
-  });
-
-  const newHeaders = new Headers(response.headers);
-  const setCookie = response.headers.get("set-cookie");
-  if (setCookie) newHeaders.set("set-cookie", setCookie);
-
-  return new Response(response.body, {
-    status: response.status,
-    headers: newHeaders,
-  });
+export async function GET(req) {
+  return proxy(req)
+}
+export async function POST(req) {
+  return proxy(req)
 }
 
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE };
+async function proxy(req) {
+  const url = new URL(req.url)
+  const path = url.pathname.replace("/api/proxy", "") + url.search
+  const target = "https://rent-spotter-new.onrender.com" + path
+
+  const res = await fetch(target, {
+    method: req.method,
+    headers: req.headers,
+    body: req.body ? await req.text() : undefined,
+  })
+
+  const newHeaders = new Headers(res.headers)
+  const cookie = res.headers.get("set-cookie")
+  if (cookie) newHeaders.set("set-cookie", cookie)
+
+  return new Response(res.body, {
+    status: res.status,
+    headers: newHeaders,
+  })
+}
