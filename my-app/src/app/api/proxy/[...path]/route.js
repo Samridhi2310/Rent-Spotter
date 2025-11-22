@@ -1,41 +1,33 @@
-// app/api/proxy/[...path]/route.js
-const BACKEND_URL = "https://rent-spotter-backend.onrender.com";  // ← double-check this is your exact Render URL
+// app/api/proxy/[...path]/route.js   ←←← EXACT PATH
+const BACKEND_URL = "https://rent-spotter-backend.onrender.com"   // ← your real Render URL
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"
 
-export async function GET(request) {
-  return proxy(request);
-}
-export async function POST(request) {
-  return proxy(request);
-}
-export async function PUT(request) {
-  return proxy(request);
-}
-export async function DELETE(request) {
-  return proxy(request);
-}
+async function handler(req) {
+  const url = new URL(req.url)
+  // Remove "/api/proxy" from the path
+  const backendPath = url.pathname.replace(/^\/api\/proxy/, "") + url.search
 
-async function proxy(request) {
-  const url = new URL(request.url);
-  const path = url.pathname.replace('/api/proxy', '');  // removes /api/proxy correctly
-  const targetUrl = BACKEND_URL + path + url.search;
+  const targetUrl = `${BACKEND_URL}${backendPath}`
 
   const response = await fetch(targetUrl, {
-    method: request.method,
+    method: req.method,
     headers: {
-      ...Object.fromEntries(request.headers),
+      ...Object.fromEntries(req.headers),
       host: new URL(BACKEND_URL).host,
     },
-    body: request.method !== 'GET' ? await request.text() : undefined,
-  });
+    body: req.method !== "GET" && req.method !== "HEAD" ? await req.text() : undefined,
+  })
 
-  const newHeaders = new Headers(response.headers);
-  const setCookie = response.headers.get('set-cookie');
-  if (setCookie) newHeaders.set('set-cookie', setCookie);
+  // Forward set-cookie headers
+  const newHeaders = new Headers(response.headers)
+  const setCookie = response.headers.get("set-cookie")
+  if (setCookie) newHeaders.set("set-cookie", setCookie)
 
   return new Response(response.body, {
     status: response.status,
     headers: newHeaders,
-  });
+  })
 }
+
+export { handler as GET, handler as POST, handler as PUT, handler as DELETE }
