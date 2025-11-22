@@ -76,7 +76,7 @@ function ContactDetail() {
 
     try {
       const userId=session.user.id
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/enquiryDetail/${userId}`, {
+      const response = await fetch(`/api/proxy/enquiryDetail/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

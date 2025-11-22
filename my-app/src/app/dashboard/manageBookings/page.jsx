@@ -29,7 +29,7 @@ const AdminBookingDashboard = () => {
     try {
       setError("");
       console.log("Sending GET request to fetch bookings...");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/showAllBooking/${session.user.id}`, {
+      const response = await fetch(`/api/proxy/showAllBooking/${session.user.id}`, {
         method: "GET",
         credentials: "include",
       });
@@ -67,7 +67,7 @@ const AdminBookingDashboard = () => {
         }
         console.log(`Fetching payment for booking ${booking._id}, PG ID: ${booking.pg._id}`);
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment/${booking._id}/${booking.pg._id}`,
+          `/api/payment/${booking._id}/${booking.pg._id}`,
           {
             method: "GET",
             credentials: "include",
@@ -110,7 +110,7 @@ const AdminBookingDashboard = () => {
     try {
       console.log("Submitting rejection for booking ID:", editingBookingId);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/update/${editingBookingId}`,
+        `/update/${editingBookingId}`,
         {
           method: "PUT",
           credentials: "include",
@@ -146,7 +146,7 @@ const AdminBookingDashboard = () => {
     try {
       console.log("Confirm clicked for booking ID:", bookingId);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/update/${bookingId}`,
+        `/update/${bookingId}`,
         {
           method: "PUT",
           credentials: "include",
@@ -179,7 +179,7 @@ const AdminBookingDashboard = () => {
     try {
       console.log("Complete clicked for booking ID:", bookingId);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/update/${bookingId}`,
+        `/update/${bookingId}`,
         {
           method: "PUT",
           credentials: "include",
@@ -222,7 +222,7 @@ const AdminBookingDashboard = () => {
     try {
       console.log("Submitting vacate response:", action, "for booking ID:", editingVacateBookingId);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/${editingVacateBookingId}/vacate-response`,
+        `/bookings/${editingVacateBookingId}/vacate-response`,
         {
           method: "POST",
           credentials: "include",

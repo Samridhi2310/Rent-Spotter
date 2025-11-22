@@ -28,7 +28,7 @@ function SignUp() {
     setSuccess("");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`, {
+      const response = await fetch(`/api/proxy/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

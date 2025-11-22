@@ -43,7 +43,7 @@ const PaymentButton = ({ bookingId, bookingStatus, onPaymentComplete }) => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment/create-order`, {
+      const response = await fetch(`/api/proxy/api/payment/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId, bookingStatus }),
@@ -70,8 +70,7 @@ const PaymentButton = ({ bookingId, bookingStatus, onPaymentComplete }) => {
         handler: async function (response) {
           try {
             console.log("Verifying payment:", response);
-            const verifyResponse = await axios.post(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment/verify`,
+            const verifyResponse = await axios.post(`/api/proxy/api/payment/verify`,
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

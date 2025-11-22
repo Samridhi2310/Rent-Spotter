@@ -33,12 +33,12 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json()); 
-app.use("/",complaintRoutes)
-app.use("/",userRoutes)
-app.use("/",adminRoutes)
-app.use("/",pgRoutes)
-app.use("/",bookingRoutes)
-app.use("/api/payment", paymentRoutes);
+app.use("/api/proxy",complaintRoutes)
+app.use("/api/proxy",userRoutes)
+app.use("/api/proxy",adminRoutes)
+app.use("/api/proxy",pgRoutes)
+app.use("/api/proxy",bookingRoutes)
+app.use("/api/proxy/payment", paymentRoutes);
 
 app.get("/",(req,res)=>{
     res.send("hello");

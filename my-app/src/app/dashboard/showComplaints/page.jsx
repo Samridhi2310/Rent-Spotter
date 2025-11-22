@@ -49,7 +49,7 @@ const SuperAdminComplaints = () => {
     const fetchComplaints = async (pageNum) => {
       try {
         setLoading(true);
-        const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/fetchComplaints?page=${pageNum}&limit=10${
+        const url = `/fetchComplaints?page=${pageNum}&limit=10${
           filterStatus !== "All" ? `&status=${filterStatus}` : ""
         }`;
         const res = await fetch(url, {
@@ -77,7 +77,7 @@ const SuperAdminComplaints = () => {
 
   const markInProgress = async (complaintId) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints/${complaintId}/status`, {
+      const res = await fetch(`/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -95,7 +95,7 @@ const SuperAdminComplaints = () => {
 
   const markResolved = async (complaintId) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints/${complaintId}/status`, {
+      const res = await fetch(`/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -121,7 +121,7 @@ const SuperAdminComplaints = () => {
       return;
     }
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints/${complaintId}/replies`, {
+      const res = await fetch(`/api/proxy/complaints/${complaintId}/replies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -149,7 +149,7 @@ const SuperAdminComplaints = () => {
 
   const archiveComplaint = async (complaintId) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints/${complaintId}/archive`, {
+      const res = await fetch(`/api/proxy/complaints/${complaintId}/archive`, {
         method: "PATCH",
         credentials: "include",
       });

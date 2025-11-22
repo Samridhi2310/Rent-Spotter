@@ -10,7 +10,7 @@
 //   useEffect(() => {
 //     const fetchBookings = async () => {
 //       try {
-//         const res = await axios.get("${process.env.NEXT_PUBLIC_BACKEND_URL}/my-bookings", {
+//         const res = await axios.get("/api/proxy/my-bookings", {
 //           withCredentials: true,
 //         });
 //         setBookings(res.data.bookings);
@@ -31,7 +31,7 @@
 
 //     try {
 //       const res = await axios.put(
-//         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/bookings/${bookingId}/cancel`,
+//         `/user/bookings/${bookingId}/cancel`,
 //         {},
 //         { withCredentials: true }
 //       );
@@ -123,7 +123,7 @@ const UserBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/my-bookings`, {
+        const res = await axios.get(`/api/proxy/my-bookings`, {
           withCredentials: true,
         });
         setBookings(res.data.bookings);
@@ -144,8 +144,7 @@ const UserBookings = () => {
     if (!confirmCancel) return;
 
     try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/bookings/${bookingId}/cancel`,
+      await axios.put(`/api/proxy/user/bookings/${bookingId}/cancel`,
         {},
         { withCredentials: true }
       );
@@ -185,8 +184,7 @@ const UserBookings = () => {
     }
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/${bookingId}/vacate`,
+      await axios.post(`/api/proxy/bookings/${bookingId}/vacate`,
         { vacateReason: reason },
         { withCredentials: true }
       );

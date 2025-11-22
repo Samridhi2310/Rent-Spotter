@@ -37,7 +37,7 @@ export default function PgManagement() {
       setLoading(true);
       setError(null);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/my-pgs/${session.user.id}?page=${pageNum}&limit=10`,
+        `/my-pgs/${session.user.id}?page=${pageNum}&limit=10`,
         { withCredentials: true }
       );
       const newData = response.data.data || [];
@@ -93,7 +93,7 @@ export default function PgManagement() {
   // Handle delete PG
   const handleDelete = async (pgId) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pg/${pgId}`, {
+      await axios.delete(`/pg/${pgId}`, {
         withCredentials: true,
       });
       setPgDetails(pgDetails.filter((pg) => pg._id !== pgId));
@@ -175,8 +175,7 @@ export default function PgManagement() {
       }
       console.log("editPg.address:", editPg.address);
 
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/pg/${editPg._id}`,
+      const response = await axios.put(`/api/proxy/pg/${editPg._id}`,
         formData,
         {
           withCredentials: true,

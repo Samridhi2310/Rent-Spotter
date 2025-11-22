@@ -7,7 +7,7 @@ export default function AdminDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/getAllAdminDetails`, { credentials: "include" })
+    fetch(`/api/proxy/getAllAdminDetails`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         setAdmins(data);

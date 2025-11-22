@@ -27,7 +27,7 @@ function BookingModal({ isOpen, onClose, pgDetails, bookingStatus, hasCompletedP
     setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment/${bookingStatus.bookingId}/${pgDetails._id}?t=${Date.now()}`,
+        `/api/payment/${bookingStatus.bookingId}/${pgDetails._id}?t=${Date.now()}`,
         {
           withCredentials: true,
           headers: { "Cache-Control": "no-cache" },

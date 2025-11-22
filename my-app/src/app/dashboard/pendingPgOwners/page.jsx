@@ -18,7 +18,7 @@ export default function PendingAdmins() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pending_admins`, {
+        const res = await fetch(`/api/proxy/pending_admins`, {
           credentials: "include",
         });
 
@@ -49,7 +49,7 @@ export default function PendingAdmins() {
 
     try {
       setProcessing((prev) => ({ ...prev, [adminId]: true }));
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/approve_admin/${adminId}`, {
+      const res = await fetch(`/api/proxy/approve_admin/${adminId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -100,7 +100,7 @@ export default function PendingAdmins() {
 
     try {
       setProcessing((prev) => ({ ...prev, [rejectAdminId]: true }));
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reject_admin/${rejectAdminId}`, {
+      const res = await fetch(`/api/proxy/reject_admin/${rejectAdminId}`, {
         method: "POST",
         credentials: "include",
         headers: {

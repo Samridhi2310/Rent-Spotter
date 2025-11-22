@@ -45,7 +45,7 @@ function Header() {
       setStatusLoading(true);
       setStatusError("");
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/${session.user.id}`, {
+        const res = await fetch(`/api/proxy/admin/${session.user.id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -79,7 +79,7 @@ function Header() {
     if (session?.user?.id) {
       setFetchingUserData(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${session.user.id}`, {
+        const response = await fetch(`/api/proxy/user/${session.user.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -198,7 +198,7 @@ function Header() {
 
       const updatePromise = async () => {
         const updateResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${session.user.id}`,
+          `/user/${session.user.id}`,
           {
             method: "PUT",
             headers: {
@@ -215,7 +215,7 @@ function Header() {
         }
 
         const getResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${session.user.id}`,
+          `/user/${session.user.id}`,
           {
             method: "GET",
             headers: {
@@ -288,7 +288,7 @@ function Header() {
 
       const updatePromise = async () => {
         const updateResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/${session.user.id}`,
+          `/admin/${session.user.id}`,
           {
             method: "PUT",
             headers: {
@@ -305,7 +305,7 @@ function Header() {
         }
 
         const getResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${session.user.id}`,
+          `/user/${session.user.id}`,
           {
             method: "GET",
             headers: {
@@ -364,7 +364,7 @@ function Header() {
     try {
       const deletePromise = async () => {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${session.user.id}`,
+          `/user/${session.user.id}`,
           {
             method: "DELETE",
             headers: {
