@@ -863,6 +863,7 @@ import "swiper/css/autoplay";
 import "react-tooltip/dist/react-tooltip.css";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const BookingModal = dynamic(() => import("./bookingModal"), { ssr: false });
 
 export default function FetchPgDetails() {
