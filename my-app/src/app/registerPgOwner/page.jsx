@@ -46,7 +46,7 @@ export default function RegisterPgOwner() {
     });
 
     try {
-      const response = await fetch(`/api/proxy/register-pg-owner`, {
+      const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/register-pg-owner`, {
         method: 'POST',
         body: data,
       });

@@ -45,7 +45,7 @@ function Header() {
       setStatusLoading(true);
       setStatusError("");
       try {
-        const res = await fetch(`/api/proxy/admin/${session.user.id}`, {
+        const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/admin/${session.user.id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -79,7 +79,7 @@ function Header() {
     if (session?.user?.id) {
       setFetchingUserData(true);
       try {
-        const response = await fetch(`/api/proxy/user/${session.user.id}`, {
+        const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/${session.user.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -29,7 +29,7 @@ const AdminBookingDashboard = () => {
     try {
       setError("");
       console.log("Sending GET request to fetch bookings...");
-      const response = await fetch(`/api/proxy/showAllBooking/${session.user.id}`, {
+      const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/showAllBooking/${session.user.id}`, {
         method: "GET",
         credentials: "include",
       });

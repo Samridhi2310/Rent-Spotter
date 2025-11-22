@@ -175,7 +175,7 @@ export default function PgManagement() {
       }
       console.log("editPg.address:", editPg.address);
 
-      const response = await axios.put(`/api/proxy/pg/${editPg._id}`,
+      const response = await axios.put(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg/${editPg._id}`,
         formData,
         {
           withCredentials: true,

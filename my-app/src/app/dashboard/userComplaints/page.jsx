@@ -17,7 +17,7 @@ export default function UserComplaints() {
     setLoading(true);
     try {
         const userId=session.user.id;
-      const res = await fetch(`/api/proxy/userComplaints/${userId}?page=${page}&limit=${limit}`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/userComplaints/${userId}?page=${page}&limit=${limit}`, {
         credentials:"include"
       });
       const data = await res.json();

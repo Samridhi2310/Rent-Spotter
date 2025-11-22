@@ -98,7 +98,7 @@ export default function AddPgPage() {
     }
 
     try {
-      const res = await fetch(`/api/proxy/addPgDetail/${adminId}`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/addPgDetail/${adminId}`, {
         method: "POST",
         body: formData,
         credentials: "include",

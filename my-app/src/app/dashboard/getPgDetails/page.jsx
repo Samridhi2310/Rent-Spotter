@@ -29,7 +29,7 @@ export default function PGDetailsTable() {
     const fetchPGDetails = async (pageNum) => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/proxy/pg-details?page=${pageNum}`, {
+        const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-details?page=${pageNum}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

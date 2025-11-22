@@ -101,7 +101,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch(`/api/proxy/login`, {
+          const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -163,7 +163,7 @@ export const authOptions = {
       if (account?.provider === "github" || account?.provider === "google") {
         // Optionally sync social provider user to MongoDB
         try {
-          const res = await fetch(`/api/proxy/user/sync`, {
+          const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

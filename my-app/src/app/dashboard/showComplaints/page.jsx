@@ -77,7 +77,7 @@ const SuperAdminComplaints = () => {
 
   const markInProgress = async (complaintId) => {
     try {
-      const res = await fetch(`/api/proxy/complaints/${complaintId}/status`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -95,7 +95,7 @@ const SuperAdminComplaints = () => {
 
   const markResolved = async (complaintId) => {
     try {
-      const res = await fetch(`/api/proxy/complaints/${complaintId}/status`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -121,7 +121,7 @@ const SuperAdminComplaints = () => {
       return;
     }
     try {
-      const res = await fetch(`/api/proxy/complaints/${complaintId}/replies`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/replies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -149,7 +149,7 @@ const SuperAdminComplaints = () => {
 
   const archiveComplaint = async (complaintId) => {
     try {
-      const res = await fetch(`/api/proxy/complaints/${complaintId}/archive`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/archive`, {
         method: "PATCH",
         credentials: "include",
       });

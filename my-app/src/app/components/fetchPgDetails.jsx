@@ -60,7 +60,7 @@
 //     requestBody.availability = true;
 
 //     try {
-//       const res = await fetch(`/api/proxy/pg`, {
+//       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg`, {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@
 //       const user = session?.user?.id;
 //       if (!user) return;
 
-//       const res = await fetch(`/api/proxy/booking-status/${user}/${pgId}`);
+//       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking-status/${user}/${pgId}`);
 //       const data = await res.json();
 
 //       if (res.ok && data.status) {
@@ -109,7 +109,7 @@
 //       const user = session?.user?.id;
 //       if (!user) return;
 
-//       const res = await fetch(`/api/proxy/api/payment/has-completed-payment/${user}`, {
+//       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/api/payment/has-completed-payment/${user}`, {
 //         method: 'GET',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -457,7 +457,7 @@
 //     requestBody.availability = true;
 
 //     try {
-//       const res = await fetch(`/api/proxy/pg`, {
+//       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg`, {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -960,7 +960,7 @@ export default function FetchPgDetails() {
         limit: 9,
       });
 
-      const res = await fetch(`/api/proxy/pg-all?${params.toString()}`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -992,7 +992,7 @@ export default function FetchPgDetails() {
       params.append("page", pageNum);
       params.append("limit", 9);
 
-      const res = await fetch(`/api/proxy/pg-all?${params.toString()}`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -1055,7 +1055,7 @@ export default function FetchPgDetails() {
   const fetchBookingStatus = async (pgId) => {
     if (!session?.user?.id) return;
     try {
-      const res = await fetch(`/api/proxy/booking-status/${session.user.id}/${pgId}`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking-status/${session.user.id}/${pgId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -1113,7 +1113,7 @@ export default function FetchPgDetails() {
     }
 
     try {
-      const res = await fetch(`/api/proxy/booking`, {
+      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
