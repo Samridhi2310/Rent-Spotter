@@ -18,7 +18,7 @@ app.use(cookieParser());
 // ✅ Always parse JSON before routes
 const allowedOrigins = [
   'https://rent-spotter.vercel.app',
-  'https://rent-spotter-is5y.vercel.app', // optional if you no longer use it
+  'https://rent-spotter-utzl.vercel.app/', // optional if you no longer use it
   'http://localhost:3000' // for local dev
 ];
 
