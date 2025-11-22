@@ -7,10 +7,13 @@ const {
   updatedPgDetail,
   deletedPgDetail,
   getMyPgDetails,
-  getPGDetailsForSuperadmin
+  getPGDetailsForSuperadmin,
+  getAllPgDetails,
 } = require("../controller/pgDetailsController");
 
 const router = express.Router();
+router.get("/pg-all", getAllPgDetails);
+
 router.post("/pg", ShowPgDetails);
 router.get("/my-pgs/:adminId", verifyRole("admin"), getMyPgDetails);
 router.delete(
@@ -26,7 +29,6 @@ router.put(
   checkAdminOwnership,
   updatedPgDetail
 );
-router.get('/pg-details', verifyRole("superadmin"), getPGDetailsForSuperadmin);
-
+router.get("/pg-details", verifyRole("superadmin"), getPGDetailsForSuperadmin);
 
 module.exports = router;

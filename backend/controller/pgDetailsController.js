@@ -77,228 +77,84 @@ exports.deletedPgDetail = async (req, res) => {
 };
 
 
-// exports.updatedPgDetail = async (req, res) => {
-//   try {
-//     const pgDetailId = req.params.pgDetailId;
 
-//     // Parse FormData fields
-//     const {
-//       sharing,
-//       name,
-//       description,
-//       genderAllowed,
-//       rent,
-//       availability,
-//     } = req.body;
+// Route to get ALL PG details (Public)
+// backend/controllers/pgController.js or wherever your routes are
 
-//     // Parse nested address fields
-//     const address = {
-//       street: req.body["address[street]"] || "",
-//       city: req.body["address[city]"] || "",
-//       state: req.body["address[state]"] || "",
-//       pincode: req.body["address[pincode]"] || "",
-//       landmark: req.body["address[landmark]"] || "",
-//     };
+exports.getAllPgDetails = async (req, res) => {
+  try {
+    const { city, sharing, rent, gender, page = 1, limit = 9 } = req.query;
 
-//     // Parse nested charges fields
-//     const charges = {
-//       electricity: req.body["charges[electricity]"]
-//         ? parseInt(req.body["charges[electricity]"])
-//         : undefined,
-//       maintenance: req.body["charges[maintenance]"]
-//         ? parseInt(req.body["charges[maintenance]"])
-//         : undefined,
-//       deposit: req.body["charges[deposit]"]
-//         ? parseInt(req.body["charges[deposit]"])
-//         : undefined,
-//     };
+    let query = { availability: true }; // Only show available PGs
 
-//     // Parse amenities and rules arrays
-//     const amenities = req.body["amenities[]"]
-//       ? Array.isArray(req.body["amenities[]"])
-//         ? req.body["amenities[]"]
-//         : req.body["amenities[]"].split(",").map((item) => item.trim())
-//       : [];
-//     const rules = req.body["rules[]"]
-//       ? Array.isArray(req.body["rules[]"])
-//         ? req.body["rules[]"]
-//         : req.body["rules[]"].split(",").map((item) => item.trim())
-//       : [];
+    // City filter
+    if (city && city.trim() !== "") {
+      query["address.city"] = { $regex: new RegExp(city, 'i') }; // Case-insensitive
+    }
 
-//     // Handle uploaded images (Cloudinary URLs)
-//     let images;
-//     if (req.files && req.files.length > 0) {
-//       images = req.files.map((file) => file.path); // Cloudinary URL
-//     }
+    // Sharing filter
+    if (sharing && sharing !== "All" && sharing !== "") {
+      query.sharing = sharing;
+    }
 
-//     // Fetch existing PG to merge images
-//     const existingPg = await pgSchema.findById(pgDetailId);
-//     if (!existingPg) {
-//       return res.status(404).json({ message: "PG detail not found" });
-//     }
+    // Rent filter
+    if (rent && rent.trim() !== "") {
+      const rentRange = rent.split("-");
+      if (rentRange.length > 1) {
+        query.rent = {
+          $gte: parseInt(rentRange[0]),
+          $lte: parseInt(rentRange[1]),
+        };
+      } else if (rent.startsWith('<')) {
+        query.rent = { $lt: parseInt(rent.slice(1)) };
+      } else if (rent.includes('+')) {
+        query.rent = { $gte: parseInt(rent.replace('+', '')) };
+      } else {
+        const rentValue = parseInt(rent);
+        if (!isNaN(rentValue)) query.rent = { $gte: rentValue };
+      }
+    }
 
-//     // Build update object
-//     const updateData = {
-//       sharing,
-//       name,
-//       description,
-//       genderAllowed,
-//       rent: parseInt(rent) || existingPg.rent,
-//       availability: availability === "true" || availability === true,
-//       address,
-//       charges,
-//       amenities,
-//       rules,
-//       images: images ? [...(existingPg.images || []), ...images] : existingPg.images,
-//     };
+    // Gender filter
+    if (gender && gender !== "All" && gender !== "") {
+      query.genderAllowed = gender;
+    }
 
-//     // Update PG in the database
-//     const updatedPgDetail = await pgSchema.findByIdAndUpdate(
-//       pgDetailId,
-//       updateData,
-//       { new: true, runValidators: true }
-//     );
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
 
-//     if (!updatedPgDetail) {
-//       return res.status(404).json({ message: "PG detail not found" });
-//     }
+    // Fetch paginated data + total count in parallel
+    const [data, total] = await Promise.all([
+      pgSchema.find(query).skip(skip).limit(limitNum).sort({ createdAt: -1 }),
+      pgSchema.countDocuments(query),
+    ]);
 
-//     console.log("Updated PG detail:", updatedPgDetail); // Debug log
+    const hasMore = skip + data.length < total;
 
-//     res
-//       .status(200)
-//       .json({ message: "PG detail updated successfully", data: updatedPgDetail });
-//   } catch (err) {
-//     console.error("Error updating PG detail:", err);
-//     res.status(500).json({ message: "Internal Server Error", error: err.message });
-//   }
-// };
-// exports.updatedPgDetail = async (req, res) => {
-//   try {
-//     const pgDetailId = req.params.pgDetailId;
+    res.status(200).json({
+      success: true,
+      count: data.length,
+      total,
+      hasMore,
+      page: pageNum,
+      data,
+    });
 
-//     // Parse FormData fields
-//     const {
-//       sharing,
-//       name,
-//       description,
-//       genderAllowed,
-//       rent,
-//       availability,
-//     } = req.body;
+  } catch (error) {
+    console.error("Error in getAllPgDetails:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
 
-//     // Parse nested address fields
-//     const address = {
-//       street: req.body["address[street]"] || "",
-//       city: req.body["address[city]"] || "",
-//       state: req.body["address[state]"] || "",
-//       pincode: req.body["address[pincode]"] || "",
-//       landmark: req.body["address[landmark]"] || "",
-//     };
 
-//     // Validate required address fields
-//     const requiredAddressFields = ["street", "city", "state", "pincode"];
-//     const missingFields = requiredAddressFields.filter(
-//       (field) => !address[field] || address[field].trim() === ""
-//     );
-//     if (missingFields.length > 0) {
-//       return res.status(400).json({
-//         message: `Missing required address fields: ${missingFields.join(", ")}`,
-//       });
-//     }
 
-//     // Parse nested charges fields
-//     const charges = {
-//       electricity: req.body["charges[electricity]"]
-//         ? parseInt(req.body["charges[electricity]"])
-//         : undefined,
-//       maintenance: req.body["charges[maintenance]"]
-//         ? parseInt(req.body["charges[maintenance]"])
-//         : undefined,
-//       deposit: req.body["charges[deposit]"]
-//         ? parseInt(req.body["charges[deposit]"])
-//         : undefined,
-//     };
 
-//     // Parse amenities and rules arrays
-//     const amenities = req.body["amenities[]"]
-//       ? Array.isArray(req.body["amenities[]"])
-//         ? req.body["amenities[]"]
-//         : req.body["amenities[]"].split(",").map((item) => item.trim())
-//       : [];
-//     const rules = req.body["rules[]"]
-//       ? Array.isArray(req.body["rules[]"])
-//         ? req.body["rules[]"]
-//         : req.body["rules[]"].split(",").map((item) => item.trim())
-//       : [];
 
-//     // Handle uploaded images
-//     let images;
-//     if (req.files && req.files.length > 0) {
-//       images = req.files.map((file) => file.path); // Cloudinary URL
-//     }
-
-//     // Fetch existing PG to merge images
-//     const existingPg = await pgSchema.findById(pgDetailId);
-//     if (!existingPg) {
-//       return res.status(404).json({ message: "PG detail not found" });
-//     }
-
-//     // Build update object
-//     const updateData = {
-//       sharing,
-//       name,
-//       description,
-//       genderAllowed,
-//       rent: parseInt(rent) || existingPg.rent,
-//       availability: availability === "true" || availability === true,
-//       address,
-//       charges,
-//       amenities,
-//       rules,
-//       images: images ? [...(existingPg.images || []), ...images] : existingPg.images,
-//     };
-
-//     // Update PG in the database
-//     const updatedPgDetail = await pgSchema.findByIdAndUpdate(
-//       pgDetailId,
-//       updateData,
-//       { new: true, runValidators: true }
-//     );
-
-//     if (!updatedPgDetail) {
-//       return res.status(404).json({ message: "PG detail not found" });
-//     }
-
-//     res.status(200).json({
-//       message: "PG detail updated successfully",
-//       data: updatedPgDetail,
-//     });
-//   } catch (err) {
-//     console.error("Error updating PG detail:", err);
-//     res.status(500).json({ message: "Internal Server Error", error: err.message });
-//   }
-// };
-
-// // Route to get PG details for an admin
-// exports.getMyPgDetails = async (req, res) => {
-//   try {
-//     const adminId = req.params.adminId;
-
-//     const pgDetails = await pgSchema.find({ adminId: adminId });
-
-//     if (pgDetails.length === 0) {
-//       return res
-//         .status(404)
-//         .json({ message: "No PG details found for this admin" });
-//     }
-
-//     res.status(200).json({ message: "PG details found", data: pgDetails });
-//   } catch (err) {
-//     console.error("Error fetching PG details:", err);
-//     res.status(500).json({ message: "Internal Server Error", error: err.message });
-//   }
-// };
 // Route to update PG details
 exports.updatedPgDetail = async (req, res) => {
   try {
