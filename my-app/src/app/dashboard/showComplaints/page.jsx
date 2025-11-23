@@ -55,6 +55,10 @@ const SuperAdminComplaints = () => {
         const res = await fetch(url, {
           method: "GET",
           credentials: "include",
+          headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         });
         if (!res.ok) throw new Error("Failed to fetch complaints");
         const data = await res.json();
@@ -79,7 +83,10 @@ const SuperAdminComplaints = () => {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },,
         credentials: "include",
         body: JSON.stringify({ status: "In Progress" }),
       });
@@ -97,7 +104,10 @@ const SuperAdminComplaints = () => {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+      headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         credentials: "include",
         body: JSON.stringify({ status: "Resolved" }),
       });
@@ -123,7 +133,10 @@ const SuperAdminComplaints = () => {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/replies`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+       headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         credentials: "include",
         body: JSON.stringify({ message, adminId }),
       });
@@ -151,6 +164,10 @@ const SuperAdminComplaints = () => {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/complaints/${complaintId}/archive`, {
         method: "PATCH",
+        headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to archive complaint");
@@ -382,5 +399,6 @@ const SuperAdminComplaints = () => {
     </SuperAdminLayout>
   );
 };
+
 
 export default SuperAdminComplaints;
