@@ -45,7 +45,10 @@ const PaymentButton = ({ bookingId, bookingStatus, onPaymentComplete }) => {
 
       const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/api/payment/create-order`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         body: JSON.stringify({ bookingId, bookingStatus }),
         credentials: "include",
       });
@@ -77,7 +80,13 @@ const PaymentButton = ({ bookingId, bookingStatus, onPaymentComplete }) => {
                 razorpay_signature: response.razorpay_signature,
                 paymentId,
               },
-              { withCredentials: true }
+              {
+                withCredentials: true,
+                headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
+              }
             );
             console.log("Payment verification response:", verifyResponse.data);
             toast.success("Payment successful!");
@@ -138,5 +147,6 @@ const PaymentButton = ({ bookingId, bookingStatus, onPaymentComplete }) => {
     </>
   );
 };
+
 
 export default PaymentButton;
