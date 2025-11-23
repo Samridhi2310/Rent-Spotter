@@ -929,6 +929,10 @@ export default function FetchPgDetails() {
     };
   }, [hasMore, loading]);
 
+
+  console.log("backend url",process.env.NEXT_PUBLIC_BACKEND_URL); // Should print: https://rent-spotter-new.onrender.com
+
+
   // Update URL whenever filters change
   useEffect(() => {
     const params = new URLSearchParams();
@@ -1393,4 +1397,5 @@ export default function FetchPgDetails() {
     </div>
   );
 }
+
 
