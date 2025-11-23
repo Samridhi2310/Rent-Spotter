@@ -102,6 +102,10 @@ export default function AddPgPage() {
         method: "POST",
         body: formData,
         credentials: "include",
+        headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
       });
 
       const data = await res.json();
@@ -250,4 +254,5 @@ export default function AddPgPage() {
     </AdminLayout>
   );
 }
+
 
