@@ -148,12 +148,13 @@ const UserBookings = () => {
     if (!confirmCancel) return;
 
     try {
-      await axios.put(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/bookings/${bookingId}/cancel`,
+      await axios.put(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/bookings/${bookingId}/cancel`,{
 headers: {
     "Authorization": `Bearer ${session.accessToken}`,  // ← this works
     "Content-Type": "application/json"
   },
          withCredentials: true,
+      }
       );
 
       setBookings((prev) =>
@@ -193,11 +194,12 @@ headers: {
     try {
       await axios.post(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/bookings/${bookingId}/vacate`,
         { vacateReason: reason },
-        { withCredentials: true },
-                       headers: {
+        { withCredentials: true ,
+          headers: {
     "Authorization": `Bearer ${session.accessToken}`,  // ← this works
     "Content-Type": "application/json"
   },
+        },
       );
 
       setBookings((prev) =>
@@ -317,4 +319,5 @@ headers: {
 };
 
 export default UserBookings;
+
 
