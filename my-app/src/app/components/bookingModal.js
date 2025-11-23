@@ -30,7 +30,11 @@ function BookingModal({ isOpen, onClose, pgDetails, bookingStatus, hasCompletedP
         `/api/payment/${bookingStatus.bookingId}/${pgDetails._id}?t=${Date.now()}`,
         {
           withCredentials: true,
-          headers: { "Cache-Control": "no-cache" },
+          headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json",
+             "Cache-Control": "no-cache"
+  },
         }
       );
 
@@ -161,3 +165,4 @@ function BookingModal({ isOpen, onClose, pgDetails, bookingStatus, hasCompletedP
 }
 
 export default BookingModal;
+
