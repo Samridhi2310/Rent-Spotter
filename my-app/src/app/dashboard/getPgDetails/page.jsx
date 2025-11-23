@@ -31,9 +31,10 @@ export default function PGDetailsTable() {
         setLoading(true);
         const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-details?page=${pageNum}`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           credentials: 'include',
         });
 
@@ -131,4 +132,5 @@ export default function PGDetailsTable() {
       </div>
     </SuperAdminLayout>
   );
+
 }
