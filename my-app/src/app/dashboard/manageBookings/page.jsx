@@ -31,6 +31,10 @@ const AdminBookingDashboard = () => {
       console.log("Sending GET request to fetch bookings...");
       const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/showAllBooking/${session.user.id}`, {
         method: "GET",
+        headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
         credentials: "include",
       });
       if (!response.ok) {
@@ -71,9 +75,10 @@ const AdminBookingDashboard = () => {
           {
             method: "GET",
             credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
+          headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           }
         );
 
@@ -115,8 +120,9 @@ const AdminBookingDashboard = () => {
           method: "PUT",
           credentials: "include",
           headers: {
-            "Content-Type": "application/json",
-          },
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           body: JSON.stringify({
             status: "rejected",
             rejectionReason,
@@ -150,9 +156,10 @@ const AdminBookingDashboard = () => {
         {
           method: "PUT",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+         headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           body: JSON.stringify({
             status: "confirmed",
           }),
@@ -183,9 +190,10 @@ const AdminBookingDashboard = () => {
         {
           method: "PUT",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+         headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           body: JSON.stringify({
             status: "completed",
           }),
@@ -226,9 +234,10 @@ const AdminBookingDashboard = () => {
         {
           method: "POST",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+         headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
           body: JSON.stringify({
             action,
             vacateDisputeReason: action === "reject" ? vacateDisputeReason : "",
@@ -638,5 +647,6 @@ const AdminBookingDashboard = () => {
     </AdminLayout>
   );
 };
+
 
 export default AdminBookingDashboard;
