@@ -7,7 +7,13 @@ export default function AdminDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/getAllAdminDetails`, { credentials: "include" })
+    fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/getAllAdminDetails`, { 
+      credentials: "include",
+      headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
+    })
       .then((res) => res.json())
       .then((data) => {
         setAdmins(data);
@@ -53,3 +59,4 @@ export default function AdminDetails() {
     </SuperAdminLayout>
   );
 }
+
