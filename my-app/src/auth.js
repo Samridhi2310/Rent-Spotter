@@ -101,20 +101,22 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
-          const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/login`, {
-            method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-             },
-            body: JSON.stringify({
-              username: credentials.username,
-              password: credentials.password,
-            }),
-          });
-              console.log("Response status:", res.status);
-
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: credentials.username,
+                password: credentials.password,
+              }),
+            }
+          );
+          console.log("Response status:", res.status);
           const user = await res.json();
-    console.log("User response:", user);
+          console.log("User response:", user);
 
           if (!res.ok || !user) {
             throw new Error(user.message || "Invalid credentials");
@@ -125,35 +127,32 @@ export const authOptions = {
             name: user.username,
             email: user.email,
             role: user.role,
-            acccessToken: user.accessToken
-
+            accessToken: user.accessToken,
           };
         } catch (err) {
-          console.log(err.error)
-            console.error("Authorize error (frontend):", error);
-
+          console.error("Authorize error (frontend):", err.message);
           throw new Error("Login failed: " + err.message);
         }
       },
     }),
     GitHubProvider({
-      clientId: process.env.NEXT_PUBLIC_GITHUB_ID,
-      clientSecret: process.env.NEXT_PUBLIC_GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
     GoogleProvider({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_ID,
-      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET,
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
-  trustHost:true,
+  secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 15 * 60, // Update session every 15 minutes
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 15 * 60,
   },
   jwt: {
-    secret: process.env.NEXT_PUBLIC_AUTH_SECRET, // Use NEXT_PUBLIC_AUTH_SECRET for consistency
+    secret: process.env.NEXTAUTH_SECRET,
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -161,23 +160,26 @@ export const authOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.role = user.role || "user"; // Default to 'user' for social providers
-        token.accessToken = user.accessToken;  
+        token.role = user.role || "user";
+        token.accessToken = user.accessToken;
       }
+
       if (account?.provider === "github" || account?.provider === "google") {
-        // Optionally sync social provider user to MongoDB
         try {
-          const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/sync`, {
-            method: "POST",
-           headers: {
-              "Content-Type": "application/json"
-             },
-            body: JSON.stringify({
-              email: token.email,
-              username: token.name || token.email.split("@")[0],
-              provider: account.provider,
-            }),
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/sync`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: token.email,
+                username: token.name || token.email.split("@")[0],
+                provider: account.provider,
+              }),
+            }
+          );
           const syncedUser = await res.json();
           if (res.ok && syncedUser) {
             token.id = syncedUser.id;
@@ -189,13 +191,14 @@ export const authOptions = {
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.role = token.role;
-        session.accessToken = token.accessToken; 
+        session.accessToken = token.accessToken;
       }
       return session;
     },
