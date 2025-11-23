@@ -19,7 +19,8 @@ app.use(cookieParser());
 const allowedOrigins = [
   'https://rent-spotter.vercel.app',
   'https://rent-spotter-utzl.vercel.app', // optional if you no longer use it
-  'http://localhost:3000' // for local dev
+  'http://localhost:3000', // for local dev
+  'http://rent-spotter-utzl-git-master-samridhi2310-gmailcoms-projects.vercel.app'
 ];
 
 app.use(cors({
@@ -46,3 +47,4 @@ app.get("/",(req,res)=>{
 app.listen(8000,()=>{
     console.log("backend connected")
 })
+
