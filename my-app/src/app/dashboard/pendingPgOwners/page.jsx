@@ -19,6 +19,10 @@ export default function PendingAdmins() {
         setLoading(true);
         setError(null);
         const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pending_admins`, {
+          headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
           credentials: "include",
         });
 
@@ -52,9 +56,10 @@ export default function PendingAdmins() {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/approve_admin/${adminId}`, {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
       });
 
       const result = await res.json();
@@ -104,8 +109,9 @@ export default function PendingAdmins() {
         method: "POST",
         credentials: "include",
         headers: {
-          "Content-Type": "application/json",
-        },
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         body: JSON.stringify({
           reason: rejectReason,
           role: "rejected_role",
@@ -312,4 +318,5 @@ export default function PendingAdmins() {
     </div>
     </SuperAdminLayout>
   );
+
 }
