@@ -184,16 +184,14 @@ export default function PgManagement() {
       }
       console.log("editPg.address:", editPg.address);
 
-      const response = await axios.put(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg/${editPg._id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
-    "Content-Type": "multipart/form-data" 
+  axios.put(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg/${editPg._id}`, formData, {
+  withCredentials: true,
+  headers: {
+    Authorization: `Bearer ${session.accessToken}`,
+    "Content-Type": "multipart/form-data"   // ← HERE — extra comma or missing )
   },
-       
-      );
+      
+});   // ← this is probably not closed properly
 
       setPage(1);
       await fetchPgDetails(1, true);
@@ -713,4 +711,5 @@ export default function PgManagement() {
   );
 
 }
+
 
