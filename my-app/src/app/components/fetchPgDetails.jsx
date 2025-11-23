@@ -1003,7 +1003,6 @@ export default function FetchPgDetails() {
         method: "GET",
         credentials: "include",
        headers: {
-          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
           "Content-Type": "application/json"
         },
       });
@@ -1397,6 +1396,7 @@ export default function FetchPgDetails() {
     </div>
   );
 }
+
 
 
 
