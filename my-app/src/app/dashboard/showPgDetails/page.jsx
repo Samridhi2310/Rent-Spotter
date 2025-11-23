@@ -38,7 +38,11 @@ export default function PgManagement() {
       setError(null);
       const response = await axios.get(
         `/my-pgs/${session.user.id}?page=${pageNum}&limit=10`,
-        { withCredentials: true }
+        { withCredentials: true },
+        headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
       );
       const newData = response.data.data || [];
       const total = response.data.total || newData.length;
@@ -95,6 +99,10 @@ export default function PgManagement() {
     try {
       await axios.delete(`/pg/${pgId}`, {
         withCredentials: true,
+        headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
       });
       setPgDetails(pgDetails.filter((pg) => pg._id !== pgId));
       if (pgDetails.length === 1 && page > 1) {
@@ -179,8 +187,11 @@ export default function PgManagement() {
         formData,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+          headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "multipart/form-data" 
+  },
+       
       );
 
       setPage(1);
@@ -699,4 +710,5 @@ export default function PgManagement() {
       </div>
     </AdminLayout>
   );
+
 }
