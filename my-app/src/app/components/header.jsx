@@ -47,7 +47,10 @@ function Header() {
       try {
         const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/admin/${session.user.id}`, {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+         headers: {
+          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+          "Content-Type": "application/json"
+        },
           credentials: "include",
         });
         const result = await res.json();
@@ -81,9 +84,10 @@ function Header() {
       try {
         const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/${session.user.id}`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+         headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
           credentials: "include",
         });
         
@@ -202,8 +206,9 @@ function Header() {
           {
             method: "PUT",
             headers: {
-              "Content-Type": "application/json",
-            },
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
             body: JSON.stringify(formData),
             credentials: "include",
           }
@@ -219,8 +224,9 @@ function Header() {
           {
             method: "GET",
             headers: {
-              "Content-Type": "application/json",
-            },
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
             credentials: "include",
           }
         );
@@ -291,9 +297,10 @@ function Header() {
           `/admin/${session.user.id}`,
           {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
+       headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
             body: JSON.stringify(formData),
             credentials: "include",
           }
@@ -308,9 +315,10 @@ function Header() {
           `/user/${session.user.id}`,
           {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
+          headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
             credentials: "include",
           }
         );
@@ -368,8 +376,9 @@ function Header() {
           {
             method: "DELETE",
             headers: {
-              "Content-Type": "application/json",
-            },
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
             credentials: "include",
           }
         );
@@ -902,5 +911,6 @@ function Header() {
     </header>
   );
 }
+
 
 export default Header;
