@@ -964,7 +964,7 @@ export default function FetchPgDetails() {
         limit: 9,
       });
 
-      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${session.accessToken}`,  // ← this works
@@ -1397,5 +1397,6 @@ export default function FetchPgDetails() {
     </div>
   );
 }
+
 
 
