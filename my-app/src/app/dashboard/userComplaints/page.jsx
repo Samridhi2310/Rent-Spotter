@@ -18,6 +18,10 @@ export default function UserComplaints() {
     try {
         const userId=session.user.id;
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/userComplaints/${userId}?page=${page}&limit=${limit}`, {
+        headers: {
+          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+          "Content-Type": "application/json"
+        },
         credentials:"include"
       });
       const data = await res.json();
@@ -143,4 +147,5 @@ export default function UserComplaints() {
       </div>
     </div>
   );
+
 }
