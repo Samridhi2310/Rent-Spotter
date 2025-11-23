@@ -3,39 +3,30 @@ const cookie = require('cookie');
 const { decode } = require('@auth/core/jwt');
 
  
+// New middleware — much simpler and actually works
 const verifyRole = (requiredRole) => {
   return async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
     try {
-      console.log(requiredRole)
-      const cookies = req.headers.cookie;
-
-      if (!cookies) {
-        return res.status(401).json({ message: 'No cookies found' });
-      }
-
-      const parsedCookies = cookie.parse(cookies);
-      const token =
-        parsedCookies['authjs.session-token'] || parsedCookies['__Secure-next-auth.session-token'];
-        console.log(token)
-      if (!token) {
-        return res.status(401).json({ message: 'Session token not found' });
-      }
-
       const decoded = await decode({
         token,
-        secret: process.env.AUTH_SECRET,
-        salt: 'authjs.session-token',
+        secret: process.env.AUTH_SECRET,  // same as NextAuth secret
       });
-      console.log("my role",decoded.role,requiredRole)
+
       if (!decoded || decoded.role !== requiredRole) {
-        return res.status(403).json({ message: 'Access denied: insufficient permissions' });
+        return res.status(403).json({ message: 'Access denied' });
       }
 
       req.user = decoded;
       next();
     } catch (error) {
-      console.error('Token verification error:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(401).json({ message: 'Invalid token' });
     }
   };
 };
@@ -107,5 +98,6 @@ module.exports = verifyRole;
 //     }
 //   };
 // };
+
 
 // module.exports = verifyRole;
