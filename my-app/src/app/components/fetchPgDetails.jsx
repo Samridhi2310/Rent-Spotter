@@ -962,7 +962,10 @@ export default function FetchPgDetails() {
 
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+            "Content-Type": "application/json"
+        },
         credentials: "include",
       });
       const result = await res.json();
@@ -995,7 +998,10 @@ export default function FetchPgDetails() {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+       headers: {
+          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+          "Content-Type": "application/json"
+        },
       });
       const result = await res.json();
 
@@ -1057,7 +1063,10 @@ export default function FetchPgDetails() {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking-status/${session.user.id}/${pgId}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+       headers: {
+          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+          "Content-Type": "application/json"
+        },
         credentials: "include",
       });
       const data = await res.json();
@@ -1081,7 +1090,10 @@ export default function FetchPgDetails() {
         `/api/payment/has-completed-payment/${session.user.id}`,
         {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+         headers: {
+          "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+          "Content-Type": "application/json"
+        },
           credentials: "include",
         }
       );
@@ -1115,7 +1127,10 @@ export default function FetchPgDetails() {
     try {
       const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+      headers: {
+    "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+    "Content-Type": "application/json"
+  },
         credentials: "include",
         body: JSON.stringify({ pg }),
       });
@@ -1378,3 +1393,4 @@ export default function FetchPgDetails() {
     </div>
   );
 }
+
