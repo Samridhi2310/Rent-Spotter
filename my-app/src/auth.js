@@ -104,7 +104,6 @@ export const authOptions = {
           const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/login`, {
             method: "POST",
           headers: {
-              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
               "Content-Type": "application/json"
              },
             body: JSON.stringify({
@@ -126,6 +125,7 @@ export const authOptions = {
             name: user.username,
             email: user.email,
             role: user.role,
+            acccessToken: user.accessToken
 
           };
         } catch (err) {
@@ -162,6 +162,7 @@ export const authOptions = {
         token.name = user.name;
         token.email = user.email;
         token.role = user.role || "user"; // Default to 'user' for social providers
+        token.accessToken = user.accessToken;  
       }
       if (account?.provider === "github" || account?.provider === "google") {
         // Optionally sync social provider user to MongoDB
@@ -169,7 +170,6 @@ export const authOptions = {
           const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/sync`, {
             method: "POST",
            headers: {
-              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
               "Content-Type": "application/json"
              },
             body: JSON.stringify({
@@ -195,6 +195,7 @@ export const authOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.role = token.role;
+        session.accessToken = token.accessToken; 
       }
       return session;
     },
@@ -206,4 +207,5 @@ export const authOptions = {
 
 const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
 export { handlers, signIn, signOut, auth };
+
 
