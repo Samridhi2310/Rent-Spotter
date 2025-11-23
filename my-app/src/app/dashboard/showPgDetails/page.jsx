@@ -38,11 +38,12 @@ export default function PgManagement() {
       setError(null);
       const response = await axios.get(
         `/my-pgs/${session.user.id}?page=${pageNum}&limit=10`,
-        { withCredentials: true },
-        headers: {
+        { withCredentials: true,
+             headers: {
     "Authorization": `Bearer ${session.accessToken}`,  // ← this works
     "Content-Type": "application/json"
-  },
+  },},
+   
       );
       const newData = response.data.data || [];
       const total = response.data.total || newData.length;
@@ -712,3 +713,4 @@ export default function PgManagement() {
   );
 
 }
+
