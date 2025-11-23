@@ -49,6 +49,8 @@
 //   };
 const UserSchema = require("../model/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 
 exports.CreateUser = async (req, res) => {
   try {
@@ -82,28 +84,41 @@ exports.CheckUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check password if provided
-    if (password) {
-      const checkPassword = await bcrypt.compare(password, user.password);
-      if (!checkPassword) {
-        return res.status(401).json({ message: "Password does not match" });
-      }
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Password does not match" });
     }
 
-    console.log(user);
+    // 🔥 Generate JWT Access Token (Important!)
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET, // must match your environment variable
+      { expiresIn: "7d" }
+    );
 
-    // Return user data
+    console.log("User logged in:", user.username);
+
+    // Return user + token
     return res.status(200).json({
+      id: user._id,
       username: user.username,
       email: user.email,
       role: user.role,
-      id: user._id,
+      accessToken,        // 🔥 Send token to frontend
     });
+
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
 
 exports.SyncUser = async (req, res) => {
   try {
@@ -114,30 +129,44 @@ exports.SyncUser = async (req, res) => {
 
     // Check if user exists
     let user = await UserSchema.findOne({ email });
+
     if (!user) {
-      // Create new user for social provider
+      // Create new user for social login
       user = await UserSchema.create({
         username,
         email,
-        password: "social-provider-" + Math.random().toString(36).slice(2), // Dummy password
-        gender: "unknown", // Default, can be updated later
-        phone: "unknown", // Default, can be updated later
+        password: "social-" + Math.random().toString(36).slice(2),
+        gender: "unknown",
+        phone: "unknown",
         role: "user",
         provider,
       });
     } else {
-      // Update existing user
+      // Update user info
       user.username = username;
       user.provider = provider;
       await user.save();
     }
 
-    res.status(200).json({
+    // 🔥 Generate JWT Token for social login
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.status(200).json({
       id: user._id,
       username: user.username,
       email: user.email,
       role: user.role,
+      accessToken,     // 🔥 Return token to NextAuth
     });
+
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ message: "Email must be unique" });
@@ -256,3 +285,4 @@ exports.getPendingAdmins = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch pending admins.' });
   }
 };
+
