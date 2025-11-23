@@ -999,7 +999,7 @@ export default function FetchPgDetails() {
       params.append("page", pageNum);
       params.append("limit", 9);
 
-      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/pg-all?${params.toString()}`, {
         method: "GET",
         credentials: "include",
        headers: {
@@ -1065,7 +1065,7 @@ export default function FetchPgDetails() {
   const fetchBookingStatus = async (pgId) => {
     if (!session?.user?.id) return;
     try {
-      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking-status/${session.user.id}/${pgId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking-status/${session.user.id}/${pgId}`, {
         method: "GET",
        headers: {
           "Authorization": `Bearer ${session.accessToken}`,  // ← this works
@@ -1091,7 +1091,7 @@ export default function FetchPgDetails() {
     if (!session?.user?.id) return;
     try {
       const res = await fetch(
-        `/api/payment/has-completed-payment/${session.user.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment/has-completed-payment/${session.user.id}`,
         {
           method: "GET",
          headers: {
@@ -1129,7 +1129,7 @@ export default function FetchPgDetails() {
     }
 
     try {
-      const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proxy/booking`, {
         method: "POST",
       headers: {
     "Authorization": `Bearer ${session.accessToken}`,  // ← this works
