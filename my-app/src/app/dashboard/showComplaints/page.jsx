@@ -86,7 +86,7 @@ const SuperAdminComplaints = () => {
         headers: {
     "Authorization": `Bearer ${session.accessToken}`,  // ← this works
     "Content-Type": "application/json"
-  },,
+  },
         credentials: "include",
         body: JSON.stringify({ status: "In Progress" }),
       });
@@ -402,3 +402,4 @@ const SuperAdminComplaints = () => {
 
 
 export default SuperAdminComplaints;
+
