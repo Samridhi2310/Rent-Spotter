@@ -103,7 +103,10 @@ export const authOptions = {
         try {
           const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/login`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+          headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
             body: JSON.stringify({
               username: credentials.username,
               password: credentials.password,
@@ -165,7 +168,10 @@ export const authOptions = {
         try {
           const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/proxy/user/sync`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+           headers: {
+              "Authorization": `Bearer ${session.accessToken}`,  // ← this works
+              "Content-Type": "application/json"
+             },
             body: JSON.stringify({
               email: token.email,
               username: token.name || token.email.split("@")[0],
@@ -200,3 +206,4 @@ export const authOptions = {
 
 const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
 export { handlers, signIn, signOut, auth };
+
